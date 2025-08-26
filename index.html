@@ -1,154 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sistem Uji Coba OTP</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 350px;
-            text-align: center;
-        }
-        h1 {
-            color: #007bff;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Kirim dan Verifikasi OTP</title>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Uji Coba Verifikasi OTP</h1>
+    <h1>Kirim dan Verifikasi OTP via WhatsApp</h1>
+    <p>Masukkan nomor WhatsApp dan klik tombol untuk mengirim pesan OTP.</p>
 
-        <div id="form-kirim">
-            <label for="nomor_hp">Masukkan Nomor HP:</label>
-            <input type="text" id="nomor_hp" name="nomor_hp">
-            <button id="tombol-kirim">Kirim Kode Verifikasi</button>
-        </div>
+    <label for="nomorHp">Nomor WhatsApp:</label><br>
+    <input type="text" id="nomorHp" name="nomorHp" value="6289525036410"><br><br>
 
-        <div id="form-verifikasi" style="display:none;">
-            <label for="kode_otp">Masukkan Kode OTP:</label>
-            <input type="text" id="kode_otp" name="kode_otp">
-            <button id="tombol-verifikasi">Verifikasi</button>
-        </div>
-    </div>
+    <label for="kodeOtp">Kode OTP:</label><br>
+    <input type="text" id="kodeOtp" name="kodeOtp"><br><br>
+
+    <button onclick="kirimPesan()">Kirim OTP</button>
+    <button onclick="verifikasiOtp()">Verifikasi OTP</button>
 
     <script>
-        const formKirim = document.getElementById('form-kirim');
-        const formVerifikasi = document.getElementById('form-verifikasi');
-        const tombolKirim = document.getElementById('tombol-kirim');
-        const tombolVerifikasi = document.getElementById('tombol-verifikasi');
+        // Fungsi untuk mengirim pesan WhatsApp dengan OTP
+        function kirimPesan() {
+            // Mengambil nilai dari kolom input nomorHp
+            const nomorTujuan = document.getElementById("nomorHp").value;
 
-        // Ganti ini dengan data akunmu dari Kirimi.id
-        // INGAT: JANGAN DIBAGI KE SIAPA PUN!
-  
-{
-  "user_code": "KM0AG6825",
-  "device_id": "D-RIDIS",
-  "phone": "PHONE-NUMBER",
-  "secret": "2cb4b33852aaf4a0b38514282f4313520c5f875e3354e8a624db670e94e1b16b",
-  "enableTypingEffect": true,
-  "typingSpeedMs": 350,
-  "otpLength": 8,
-  "otpType": "alphanumeric",
-  "customOtpText": null,
-  "customOtpMessage": null
-}       
-        const url = "https://api.kirimi.id/v1/generate-otp"; 
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", "App 93f851988bfadec55cc36e053815602b-43f554c3-af5e-45e2-9936-62328e8daed3");
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Accept", "application/json");
 
-        tombolKirim.addEventListener('click', function(event) {
-            event.preventDefault();
-            const nomorHP = document.getElementById('nomor_hp').value;
-            if (nomorHP.length === 0) {
-                alert('Mohon masukkan nomor HP!');
-                return;
-            }
-            API_DATA.phone = nomorHP;
-            
-            // Di sini kita berpura-pura kode OTP sudah dikirim
-            alert('Kode OTP sudah dikirim!');
-            formKirim.style.display = 'none';
-            formVerifikasi.style.display = 'block';
-
-            // Kode fetch ke API Kirimi.id
-            /*
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(API_DATA)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    alert('Kode OTP sudah dikirim!');
-                    formKirim.style.display = 'none';
-                    formVerifikasi.style.display = 'block';
-                } else {
-                    alert('Ada kesalahan: ' + data.message);
-                }
-            })
-            .catch((error) => {
-                alert('Ada kesalahan saat memanggil API');
+            const raw = JSON.stringify({
+                "messages": [
+                    {
+                        "from": "447860088970",
+                        // Menggunakan nomor yang dimasukkan pengguna
+                        "to": nomorTujuan, 
+                        "messageId": "833c2d7e-dec3-41e4-a745-7d1de0d5dda8",
+                        "content": {
+                            "templateName": "test_whatsapp_template_en",
+                            "templateData": {
+                                "body": {
+                                    "placeholders": ["csrobuxnow"]
+                                }
+                            },
+                            "language": "en"
+                        }
+                    }
+                ]
             });
-            */
-        });
 
-        tombolVerifikasi.addEventListener('click', function(event) {
-            event.preventDefault();
-            const kodeMasuk = document.getElementById('kode_otp').value;
-            
-            // Kode yang kamu berikan sebagai contoh
-            const kodeBenar1 = "987543";
-            const kodeBenar2 = "725254";
-            
-            // Periksa apakah kode yang dimasukkan sama dengan kode benar
-            if (kodeMasuk === kodeBenar1 || kodeMasuk === kodeBenar2) {
-                alert("Verifikasi berhasil! Selamat datang!");
-            } else {
-                alert("Kode OTP salah. Coba lagi.");
-            }
-        });
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("https://nm3kn5.api.infobip.com/whatsapp/1/message/template", requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.error(error));
+        }
+
+        // Fungsi ini akan kamu isi nanti untuk memverifikasi OTP
+        function verifikasiOtp() {
+            const kodeYangDimasukkan = document.getElementById("kodeOtp").value;
+            // Di sini kamu bisa tambahkan kode untuk membandingkan kode yang dimasukkan
+            // dengan kode yang dikirim ke nomor HP.
+            console.log("Kode OTP yang dimasukkan: " + kodeYangDimasukkan);
+            // ... (lanjutkan dengan logika verifikasi di sini)
+        }
     </script>
 
 </body>
