@@ -86,10 +86,10 @@
             user_code: "KM0AG6825",
             device_id: "D-RIDIS",
             secret: "2cb4b33852aaf4a0b38514282f4313520c5f875e3354e8a624db670e94e1b16b",
-            otpLength: 8,
+            otpLength: 6,
             otpType: "alphanumeric",
             customOtpText: null,
-            customOtpMessage: null
+            customOtpMessage: 987543,725254
         };
         const url = "https://api.kirimi.id/v1/generate-otp"; 
 
@@ -103,7 +103,7 @@
             API_DATA.phone = nomorHP;
             
             // Di sini kita berpura-pura kode OTP sudah dikirim
-            alert('Kode OTP sudah dikirim! (Contoh: 987543 atau 725254)');
+            alert('Kode OTP sudah dikirim!');
             formKirim.style.display = 'none';
             formVerifikasi.style.display = 'block';
 
