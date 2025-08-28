@@ -30,6 +30,10 @@
             gap: 0.5rem;
             margin-bottom: 0;
         }
+        .header-logo-container img {
+            max-width: 60px; /* Logo utama dikecilkan di sini */
+            height: auto;
+        }
         .header h1 {
             color: #222;
             font-size: 1.8em;
@@ -115,6 +119,10 @@
             <h2 class="text-xl font-bold mb-2">Lakukan Pembayaran</h2>
             <p class="text-gray-600 mb-4">Silakan transfer sesuai jumlah total di atas ke nomor berikut:</p>
             
+            <div id="payment-logo-container" class="my-4 flex justify-center items-center">
+                <img id="payment-logo" src="" alt="Metode Pembayaran" style="width: 80px; height: auto;">
+            </div>
+
             <div id="payment-info" class="text-lg font-bold">
                 <p class="text-red-500">Nomor tujuan belum dimuat...</p>
             </div>
@@ -150,6 +158,12 @@
         document.getElementById('harga-display').innerText = harga;
         document.getElementById('admin-display').innerText = admin;
         document.getElementById('total-display').innerText = total;
+        
+        // Menampilkan logo metode pembayaran secara dinamis
+        const paymentLogo = document.getElementById('payment-logo');
+        const logoUrl = `https://reygenteng.github.io/reybelirbx/belirobux/${metode}.png`;
+        paymentLogo.src = logoUrl;
+        paymentLogo.alt = `${metode} Logo`;
 
         const paymentInfoDiv = document.getElementById('payment-info');
         const waLink = document.getElementById('wa-link');
@@ -164,7 +178,6 @@
         const selectedNumber = paymentNumbers[metode] || 'Hubungi admin untuk info rekening';
         paymentInfoDiv.innerHTML = `<p>${selectedNumber}</p>`;
 
-        // Nomor WhatsApp untuk chat admin di sini TIDAK menggunakan nomor pembayaran.
         const whatsappAdminNumber = '6287887028120';
         const whatsappText = `Halo Kak, mau top up ${jumlah} Robux via ${metode} dengan username ${username}. Total pembayaran ${total}.`;
         waLink.href = `https://wa.me/${whatsappAdminNumber}?text=${encodeURIComponent(whatsappText)}`;
