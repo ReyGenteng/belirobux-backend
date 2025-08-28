@@ -129,23 +129,28 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const paymentData = JSON.parse(localStorage.getItem('paymentDetails'));
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const username = urlParams.get('username');
+        const jumlah = urlParams.get('jumlah');
+        const metode = urlParams.get('metode');
+        const harga = urlParams.get('harga');
+        const admin = urlParams.get('admin');
+        const total = urlParams.get('total');
 
-        if (!paymentData) {
+        if (!username || !jumlah || !metode || !harga || !admin || !total) {
             alert('Data pembayaran tidak ditemukan. Silakan kembali ke halaman utama.');
-            window.location.href = 'https://robuxnow.xyz'; // Ganti dengan URL halaman utama
+            window.location.href = 'https://robuxnow.xyz'; 
             return;
         }
 
-        // Tampilkan data di halaman
-        document.getElementById('username-display').innerText = paymentData.username;
-        document.getElementById('jumlah-display').innerText = paymentData.jumlah;
-        document.getElementById('metode-display').innerText = paymentData.metode;
-        document.getElementById('harga-display').innerText = paymentData.harga;
-        document.getElementById('admin-display').innerText = paymentData.biayaAdmin;
-        document.getElementById('total-display').innerText = paymentData.total;
+        document.getElementById('username-display').innerText = username;
+        document.getElementById('jumlah-display').innerText = jumlah;
+        document.getElementById('metode-display').innerText = metode;
+        document.getElementById('harga-display').innerText = harga;
+        document.getElementById('admin-display').innerText = admin;
+        document.getElementById('total-display').innerText = total;
 
-        // Tampilkan info pembayaran berdasarkan metode
         const paymentInfoDiv = document.getElementById('payment-info');
         const waLink = document.getElementById('wa-link');
 
@@ -154,16 +159,15 @@
             'gopay': '089525036410 (a.n. Robux Now)',
             'shopeepay': '089525036410 (a.n. Robux Now)',
             'linkaja': '089525036410 (a.n. Robux Now)',
-            'ovo': '089525036410 (a.n. Robux Now)', 
+            'ovo': '089525036410 (a.n. Robux Now)',
         };
-        const selectedNumber = paymentNumbers[paymentData.metode] || 'Hubungi admin untuk info rekening';
+        const selectedNumber = paymentNumbers[metode] || 'Hubungi admin untuk info rekening';
         paymentInfoDiv.innerHTML = `<p>${selectedNumber}</p>`;
 
-        const whatsappText = `Halo Kak, mau top up ${paymentData.jumlah} Robux via ${paymentData.metode} dengan username ${paymentData.username}. Total pembayaran ${paymentData.total}.`;
-        waLink.href = `https://wa.me/6287887028120?text=${encodeURIComponent(whatsappText)}`;
-
-        // Hapus data dari localStorage setelah berhasil ditampilkan
-        localStorage.removeItem('paymentDetails');
+        // Nomor WhatsApp untuk chat admin di sini TIDAK menggunakan nomor pembayaran.
+        const whatsappAdminNumber = '6287887028120';
+        const whatsappText = `Halo Kak, mau top up ${jumlah} Robux via ${metode} dengan username ${username}. Total pembayaran ${total}.`;
+        waLink.href = `https://wa.me/${whatsappAdminNumber}?text=${encodeURIComponent(whatsappText)}`;
     });
 </script>
 </body>
