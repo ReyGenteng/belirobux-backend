@@ -129,7 +129,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const paymentData = JSON.parse(sessionStorage.getItem('paymentDetails'));
+        const paymentData = JSON.parse(localStorage.getItem('paymentDetails'));
 
         if (!paymentData) {
             alert('Data pembayaran tidak ditemukan. Silakan kembali ke halaman utama.');
@@ -149,20 +149,21 @@
         const paymentInfoDiv = document.getElementById('payment-info');
         const waLink = document.getElementById('wa-link');
 
-        // Ganti nomor dan nama ini sesuai dengan yang kamu punya!
         const paymentNumbers = {
             'dana': '089525036410 (a.n. Robux Now)',
             'gopay': '089525036410 (a.n. Robux Now)',
             'shopeepay': '089525036410 (a.n. Robux Now)',
             'linkaja': '089525036410 (a.n. Robux Now)',
-            'ovo': '089525036410 (a.n. Robux Now)', // Contoh
+            'ovo': '089525036410 (a.n. Robux Now)', 
         };
         const selectedNumber = paymentNumbers[paymentData.metode] || 'Hubungi admin untuk info rekening';
         paymentInfoDiv.innerHTML = `<p>${selectedNumber}</p>`;
 
-        // Siapkan link WA untuk chat admin
         const whatsappText = `Halo Kak, mau top up ${paymentData.jumlah} Robux via ${paymentData.metode} dengan username ${paymentData.username}. Total pembayaran ${paymentData.total}.`;
         waLink.href = `https://wa.me/6287887028120?text=${encodeURIComponent(whatsappText)}`;
+
+        // Hapus data dari localStorage setelah berhasil ditampilkan
+        localStorage.removeItem('paymentDetails');
     });
 </script>
 </body>
