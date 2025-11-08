@@ -1,0 +1,26 @@
+{
+  "name": "game-username-api",
+  "version": "1.0.0",
+  "description": "API untuk cek username game Mobile Legends dan Free Fire - Khusus gamesnowku.xyz",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "vercel": "^34.0.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "keywords": [
+    "game",
+    "api",
+    "mobile-legends",
+    "free-fire"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
