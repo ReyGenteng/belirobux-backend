@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - GamesNow</title>
+    <link rel="icon" href="https://reygenteng.github.io/gamesku/gamesnow.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            height: 30px;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-icons img {
+            width: 24px;
+            cursor: pointer;
+        }
+        
+        .header-icons .btn-masuk {
+            padding: 8px 15px;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-section input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .search-section button {
+            padding: 10px 20px;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .invoice-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .invoice-card h4 {
+            margin-top: 0;
+            color: #ff4500;
+            font-size: 1.1em;
+            border-bottom: 2px solid #ff4500;
+            padding-bottom: 5px;
+        }
+        
+        .invoice-card p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        .invoice-card p strong {
+            color: #333;
+        }
+
+        #invoice-results {
+            margin-top: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            margin-top: 50px;
+        }
+
+        footer {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #888;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://reygenteng.github.io/gamesku/gamesnow.png" alt="GamesNow Logo" class="logo">
+        <div class="header-icons">
+            <img src="https://api.iconify.design/ic:baseline-search.svg" alt="Search">
+            <img src="https://api.iconify.design/ic:baseline-account-circle.svg" alt="Akun">
+            <button class="btn-masuk">Masuk</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Cari Invoice Pesanan</h2>
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Masukkan User ID atau Username">
+            <button id="searchButton">Cari</button>
+        </div>
+        <div id="invoice-results">
+            <div class="empty-state">
+                <p>Silakan masukkan User ID atau Username untuk mencari pesanan Anda.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 GamesNow. All Rights Reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getDatabase, ref, onValue, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMrg2agHatw9REIXs0Pj-894UMhMB08NI",
+            authDomain: "databaseku-4e72e.firebaseapp.com",
+            databaseURL: "https://databaseku-4e72e-default-rtdb.firebaseio.com",
+            projectId: "databaseku-4e72e",
+            storageBucket: "databaseku-4e72e.firebasestorage.app",
+            messagingSenderId: "586627388924",
+            appId: "1:586627388924:web:8b39ecd9f5e5d34ee78e79",
+            measurementId: "G-JSP6R4FN49"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const invoiceResults = document.getElementById('invoice-results');
+        
+        searchButton.addEventListener('click', () => {
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm === '') {
+                alert('Mohon masukkan User ID atau Username untuk mencari.');
+                return;
+            }
+            
+            searchInvoices(searchTerm);
+        });
+
+        function searchInvoices(term) {
+            invoiceResults.innerHTML = ''; // Kosongkan hasil sebelumnya
+            
+            const invoicesRef = ref(db, 'ffinvoice');
+            
+            const userIdQuery = query(invoicesRef, orderByChild('userId'), equalTo(term));
+            
+            onValue(userIdQuery, (snapshot) => {
+                let found = false;
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const invoiceData = childSnapshot.val();
+                        displayInvoice(invoiceData, childSnapshot.key);
+                        found = true;
+                    });
+                }
+                
+                if (!found) {
+                    const usernameQuery = query(invoicesRef, orderByChild('username'), equalTo(term));
+                    onValue(usernameQuery, (usernameSnapshot) => {
+                        if (usernameSnapshot.exists()) {
+                            usernameSnapshot.forEach((childSnapshot) => {
+                                const invoiceData = childSnapshot.val();
+                                displayInvoice(invoiceData, childSnapshot.key);
+                                found = true;
+                            });
+                        }
+                        
+                        if (!found) {
+                            invoiceResults.innerHTML = '<div class="empty-state"><p>Tidak ditemukan pesanan dengan User ID atau Username tersebut.</p></div>';
+                        }
+                    }, { onlyOnce: true });
+                }
+            }, { onlyOnce: true });
+        }
+        
+        function displayInvoice(data, key) {
+            const invoiceCard = document.createElement('div');
+            invoiceCard.className = 'invoice-card';
+            invoiceCard.innerHTML = `
+                <h4>Invoice #${key.substring(0, 8)}</h4>
+                <p><strong>User ID:</strong> ${data.userId}</p>
+                <p><strong>Username:</strong> ${data.username || 'N/A'}</p>
+                <p><strong>Jumlah Diamond:</strong> ${data.diamonds}</p>
+                <p><strong>Total Harga:</strong> Rp${data.price.toLocaleString('id-ID')}</p>
+                <p><strong>Tanggal Transaksi:</strong> ${new Date(data.timestamp).toLocaleString('id-ID')}</p>
+            `;
+            invoiceResults.appendChild(invoiceCard);
+        }
+    </script>
+</body>
+</html>
