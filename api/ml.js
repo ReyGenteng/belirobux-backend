@@ -3,8 +3,9 @@ const axios = require('axios');
 module.exports = async (req, res) => {
   // Set CORS headers untuk hanya mengizinkan gamesnowku.xyz
   const allowedOrigins = [
-    'https://gamesnowku.xyz',
-    'https://www.gamesnowku.xyz'
+    'https://gamesnowku.xyz/freefire/',
+    'https://www.gamesnowku.xyz/mobilelegends/'
+    'https://www.gamesnowku.xyz/mml.html/
   ];
   
   const origin = req.headers.origin;
