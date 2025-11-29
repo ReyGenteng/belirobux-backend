@@ -1097,7 +1097,7 @@
             }
 
             try {
-                const response = await fetch(`/api/ml?id=${userId}&server=${zoneId}`);
+                const response = await fetch(`/api/ml.js?id=${userId}&server=${zoneId}`);
                 const data = await response.json();
 
                 if (data.success && data.data && data.data.username) {
