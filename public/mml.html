@@ -1097,7 +1097,7 @@
             }
 
             try {
-                const response = await fetch(`https://api.isan.eu.org/nickname/ml?id=${userId}&server=${zoneId}`);
+                const response = await fetch(`https://gamesnowku.xyz/api/ml.js?id=${userId}&server=${zoneId}`);
                 const data = await response.json();
 
                 if (data.success && data.data && data.data.username) {
@@ -1412,5 +1412,6 @@
         });
 
     </script>
+    <script src="/anti-devtools.js"></script>
 </body>
 </html>
