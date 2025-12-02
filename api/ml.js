@@ -5,7 +5,6 @@ module.exports = async (req, res) => {
   const allowedOrigins = [
     'https://gamesnowku.xyz/freefire/',
     'https://www.gamesnowku.xyz/mobilelegends/'
-    'https://www.gamesnowku.xyz/mml.html/
   ];
   
   const origin = req.headers.origin;
