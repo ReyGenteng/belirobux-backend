@@ -19,11 +19,11 @@ app.get('/api-config.js', (req, res) => {
 
 // Route khusus untuk halaman produk
 app.get('/product/freefire', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'freefire.html'));
+    res.sendFile(path.join(__dirname, 'public', 'freefire', 'index.html'));
 });
 
 app.get('/product/mobilelegends', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'mobilegends.html'));
+    res.sendFile(path.join(__dirname, 'public', 'mobilegends', 'index.html'));
 });
 
 // 404 Handler
