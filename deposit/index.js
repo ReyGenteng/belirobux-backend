@@ -9,7 +9,7 @@ const ALLOWED_API_KEYS = ['GamesNowTopUp', 'TopUp23c0748dg7'];
 // API key eksternal (simpan di environment variable untuk keamanan)
 const EXTERNAL_API_KEY = 'ftS3uUCMOztd71uxhWp9MsVQchbBNQXLOcLJpkQW1W9aQg3gyXvUzJQkHW7bV54P6fKeWrzIWJf44nuuUh7xPTMQHY8lCtslMfez';
 
-app.get('/deposit/create.js', async (req, res) => {
+app.get('/deposit/create', async (req, res) => {
     try {
         // 1. Validasi API key pengguna
         const userApiKey = req.query.apikey;
