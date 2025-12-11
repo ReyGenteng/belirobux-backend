@@ -3,6 +3,7 @@ const path = require('path');
 
 const app = express();
 
+app.use(express.json());
 // Middleware untuk file statis
 app.use(express.static('public'));
 
@@ -19,7 +20,7 @@ app.get('/api-config.js', (req, res) => {
 
 // Route khusus untuk halaman produk
 app.get('/product/freefire', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'freefire', 'freefire.html'));
+    res.sendFile(path.join(__dirname, 'public', 'freefire/index.html'));
 });
 
 app.get('/product/mobilelegends', (req, res) => {
