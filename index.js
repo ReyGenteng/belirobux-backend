@@ -24,7 +24,7 @@ app.get('/product/freefire', (req, res) => {
 });
 
 app.get('/product/mobilelegends', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'mobilegends', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'mobilegends/index.html'));
 });
 
 // 404 Handler
