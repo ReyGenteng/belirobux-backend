@@ -19,12 +19,16 @@ app.get('/api-config.js', (req, res) => {
 });
 
 // Route khusus untuk halaman produk
-app.get('/product/freefire', (req, res) => {
+app.get('/product/games/freefire', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'freefire', 'index.html'));
 });
 
-app.get('/product/mobilelegends', (req, res) => {
+app.get('/product/games/mobilelegends', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'mobilelegends', 'index.html'));
+});
+
+app.get('/product/nokos/ciaa/buy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'nokos-ciaa.html'));
 });
 
 // Redirect untuk URL yang salah
