@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.json());
 // Middleware untuk file statis
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint untuk konfigurasi API
 app.get('/api-config.js', (req, res) => {
