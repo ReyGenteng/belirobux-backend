@@ -24,16 +24,16 @@ app.get('/product/freefire', (req, res) => {
 });
 
 app.get('/product/mobilelegends', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'mobilegends', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'mobilelegends', 'index.html'));
 });
 
 // Redirect untuk URL yang salah
 app.get('/freefire', (req, res) => {
-    res.redirect('/product/freefire');
+    res.redirect('/product/games/freefire');
 });
 
 app.get('/mobilelegends', (req, res) => {
-    res.redirect('/product/mobilelegends');
+    res.redirect('/product/games/mobilelegends');
 });
 
 // Handler untuk halaman utama (root)
