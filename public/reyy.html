@@ -6,41 +6,41 @@
     <title>GamesNow - Top Up Game Instan</title>
     <link rel="icon" href="https://reygenteng.github.io/gamesku/favicon.ico" type="image/png">
     <style>
-        /* --- PENGATURAN WARNA (CSS VARIABLES) --- */
         :root {
-            /* Warna Mode Terang (Default) */
             --bg-color: #f0f2f5;
             --header-bg: #ffffff;
             --text-color: #333333;
             --card-bg: #ffffff;
             --shadow: rgba(0, 0, 0, 0.1);
-            --icon-filter: none; /* Icon tetap hitam */
+            --icon-filter: none;
             --border-color: #ddd;
+            --sidebar-bg: #ffffff;
+            --footer-bg: #1a2233; /* Warna gelap untuk footer baru */
         }
 
-        /* Warna Mode Gelap */
         [data-theme="dark"] {
             --bg-color: #222222;
             --header-bg: #2c2c2c;
             --text-color: #ffffff;
             --card-bg: #2c2c2c;
             --shadow: rgba(0, 0, 0, 0.3);
-            --icon-filter: invert(1); /* Icon jadi putih */
+            --icon-filter: invert(1);
             --border-color: #333;
+            --sidebar-bg: #2c2c2c;
+            --footer-bg: #161b22;
         }
 
-        /* Reset & Dasar */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding-bottom: 70px;
-            transition: background-color 0.3s, color 0.3s; /* Efek transisi halus */
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
-        /* Header Style */
+        /* --- Header & Search --- */
         header {
             background-color: var(--header-bg);
             padding: 15px 20px;
@@ -51,305 +51,196 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.3s;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .menu-icon {
-            width: 24px;
-            filter: var(--icon-filter);
-            transition: filter 0.3s;
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .menu-icon { width: 24px; filter: var(--icon-filter); cursor: pointer; }
+        .logo { height: 25px; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .theme-toggle { background: none; border: none; font-size: 1.2em; cursor: pointer; }
+        .search-icon { width: 24px; cursor: pointer; filter: var(--icon-filter); }
+
+        #searchContainer {
+            background-color: var(--header-bg);
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: none;
+            position: sticky;
+            top: 60px;
+            z-index: 99;
         }
 
-        .logo {
-            height: 25px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Tombol Ganti Tema */
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.2em;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-        }
-
-        .search-icon {
-            width: 24px;
-            cursor: pointer;
-            filter: var(--icon-filter);
-            padding: 5px;
-            transition: filter 0.3s;
-        }
-
-        /* Banner Style */
-        .banner-container {
-            padding: 15px;
-        }
-
-        .banner {
+        #searchInput {
             width: 100%;
-            border-radius: 15px;
-            display: block;
-            box-shadow: 0 4px 8px var(--shadow);
-        }
-
-        /* Popular Section */
-        .popular-games {
-            padding: 0 15px;
-        }
-
-        .section-title {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
             color: var(--text-color);
+            box-sizing: border-box;
+            outline: none;
         }
 
-        /* Grid System */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
+        /* --- Game Grid --- */
+        .banner-container { padding: 15px; }
+        .banner { width: 100%; border-radius: 15px; box-shadow: 0 4px 8px var(--shadow); }
+        .popular-games { padding: 0 15px 30px 15px; }
+        .section-title { font-size: 1.1em; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
+        .games-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 
-        /* Card Style */
         .game-item {
             position: relative;
             background-color: var(--card-bg);
             border-radius: 12px;
             overflow: hidden;
             text-decoration: none;
-            color: white; /* Text di dalam kartu tetap putih biar kontras sama gambar */
+            color: white;
             aspect-ratio: 3/4;
             box-shadow: 0 2px 5px var(--shadow);
         }
 
-        .game-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Overlay Text */
+        .game-item img { width: 100%; height: 100%; object-fit: cover; }
         .game-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0, 0.9), rgba(0,0,0, 0.5), transparent);
-            padding: 30px 5px 10px 5px;
+            position: absolute; bottom: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0, 0.9), transparent);
+            padding: 20px 5px 10px 5px; text-align: center; box-sizing: border-box;
+        }
+        .game-title { font-size: 0.75em; font-weight: bold; display: block; }
+        .game-publisher { font-size: 0.6em; color: #ddd; display: block; }
+
+        /* --- FOOTER BARU (Berdasarkan Foto) --- */
+        .main-footer {
+            background-color: var(--footer-bg);
+            color: #ffffff;
+            padding: 40px 20px;
+            text-align: left;
+        }
+
+        .footer-brand h2 { margin: 0; font-size: 1.5em; }
+        .footer-desc { font-size: 0.9em; color: #adb5bd; margin: 15px 0; line-height: 1.6; }
+        .footer-email { color: #ffffff; text-decoration: none; font-size: 0.9em; display: flex; align-items: center; gap: 8px; }
+
+        .footer-links-section { margin-top: 30px; }
+        .footer-links-section h3 { font-size: 1.2em; margin-bottom: 15px; }
+        .footer-links-section ul { list-style: none; padding: 0; }
+        .footer-links-section li { margin-bottom: 12px; }
+        .footer-links-section a { color: #adb5bd; text-decoration: none; font-size: 1em; }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 30px;
+            padding-top: 20px;
             text-align: center;
-            box-sizing: border-box;
+            font-size: 0.85em;
+            color: #adb5bd;
         }
 
-        .game-title {
-            font-size: 0.75em;
-            font-weight: bold;
-            margin: 0;
-            display: block;
-            line-height: 1.2;
-            text-shadow: 1px 1px 2px black;
-        }
-
-        .game-publisher {
-            font-size: 0.6em;
-            color: #ddd;
-            margin-top: 3px;
-            display: block;
-        }
-
-        /* Footer Style */
-        .footer-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: var(--header-bg);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid var(--border-color);
-            transition: background-color 0.3s;
-        }
-
-        .footer-nav a {
-            text-decoration: none;
-            color: #888;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.7em;
-        }
-
-        .footer-nav a.active {
-            color: #ff4500; /* Warna Orange saat aktif */
-        }
-
-        .footer-nav img {
-            width: 22px;
-            height: 22px;
-            margin-bottom: 3px;
-            filter: grayscale(100%); 
-            opacity: 0.6;
-        }
-
-        /* Saat dark mode, icon footer dibalik warnanya biar kelihatan */
-        [data-theme="dark"] .footer-nav img {
-            filter: invert(0.8);
-        }
-        
-        .footer-nav a.active img {
-            filter: none !important; /* Reset filter kalau aktif */
-            opacity: 1;
-        }
-
-        /* Responsive */
-        @media (max-width: 360px) {
-            .games-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
+        /* Sidebar & Overlay */
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; left: 0; background-color: var(--sidebar-bg); overflow-x: hidden; transition: 0.3s; padding-top: 60px; }
+        .sidebar a { padding: 10px 20px; text-decoration: none; font-size: 18px; color: var(--text-color); display: block; }
+        .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; }
+        .overlay { position: fixed; display: none; width: 100%; height: 100%; top: 0; background-color: rgba(0,0,0,0.5); z-index: 150; }
     </style>
 </head>
 <body>
 
+    <div id="myOverlay" class="overlay" onclick="closeNav()"></div>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="#">Beranda</a>
+        <a href="#">Riwayat</a>
+        <a href="#">Tentang Kami</a>
+    </div>
+
     <header>
         <div class="header-left">
-            <img src="https://api.iconify.design/ic:round-menu.svg" class="menu-icon" alt="Menu">
-            <img src="https://reygenteng.github.io/gamesku/gamesnow.png" alt="GamesNow Logo" class="logo">
+            <img src="https://api.iconify.design/ic:round-menu.svg" class="menu-icon" onclick="openNav()">
+            <img src="https://reygenteng.github.io/gamesku/gamesnow.png" class="logo">
         </div>
         <div class="header-right">
-            <button class="theme-toggle" id="themeBtn" title="Ganti Mode">🌙</button>
-            
-            <a href="#" class="search-link">
-                <img src="https://api.iconify.design/ic:baseline-search.svg" alt="Search" class="search-icon">
-            </a>
+            <button class="theme-toggle" id="themeBtn">🌙</button>
+            <img src="https://api.iconify.design/ic:baseline-search.svg" class="search-icon" onclick="toggleSearch()">
         </div>
     </header>
 
+    <div id="searchContainer">
+        <input type="text" id="searchInput" onkeyup="searchGame()" placeholder="Cari game...">
+    </div>
+
     <main>
         <div class="banner-container">
-            <img src="https://reygenteng.github.io/gamesku/banner.png" alt="Banner" class="banner">
+            <img src="https://reygenteng.github.io/gamesku/banner.png" class="banner">
         </div>
 
         <div class="popular-games">
             <div class="section-title">🔥 Lagi Populer</div>
-            
-            <div class="games-grid">
+            <div class="games-grid" id="gamesList">
                 <a href="freefire" class="game-item">
-                    <img src="https://reygenteng.github.io/gamesku/ff.png" alt="Free Fire">
-                    <div class="game-info">
-                        <span class="game-title">Free Fire</span>
-                        <span class="game-publisher">Garena</span>
-                    </div>
+                    <img src="https://reygenteng.github.io/gamesku/ff.png">
+                    <div class="game-info"><span class="game-title">Free Fire</span><span class="game-publisher">Garena</span></div>
                 </a>
-
                 <a href="mobilelegends" class="game-item">
-                    <img src="https://reygenteng.github.io/gamesku/ml.png" alt="Mobile Legends">
-                    <div class="game-info">
-                        <span class="game-title">Mobile Legends</span>
-                        <span class="game-publisher">Moonton</span>
-                    </div>
+                    <img src="https://reygenteng.github.io/gamesku/ml.png">
+                    <div class="game-info"><span class="game-title">Mobile Legends</span><span class="game-publisher">Moonton</span></div>
                 </a>
-
-                <a href="pubgm" class="game-item">
-                    <img src="https://reygenteng.github.io/gamesku/pubg.png" alt="PUBG Mobile" onerror="this.src='https://placehold.co/200x300?text=PUBG'">
-                    <div class="game-info">
-                        <span class="game-title">PUBG Mobile</span>
-                        <span class="game-publisher">Tencent</span>
-                    </div>
-                </a>
-
                 <a href="genshinimpact" class="game-item">
-                    <img src="https://reygenteng.github.io/gamesku/gi.png" alt="Genshin Impact">
-                    <div class="game-info">
-                        <span class="game-title">Genshin Impact</span>
-                        <span class="game-publisher">HoYoverse</span>
-                    </div>
-                </a>
-
-                <a href="honorofkings" class="game-item">
-                    <img src="https://reygenteng.github.io/gamesku/hok.png" alt="Honor of Kings">
-                    <div class="game-info">
-                        <span class="game-title">Honor of Kings</span>
-                        <span class="game-publisher">Tencent</span>
-                    </div>
-                </a>
-
-                <a href="steam" class="game-item">
-                    <img src="https://reygenteng.github.io/gamesku/steam.png" alt="Steam">
-                    <div class="game-info">
-                        <span class="game-title">Steam</span>
-                        <span class="game-publisher">Valve</span>
-                    </div>
+                    <img src="https://reygenteng.github.io/gamesku/gi.png">
+                    <div class="game-info"><span class="game-title">Genshin Impact</span><span class="game-publisher">HoYoverse</span></div>
                 </a>
             </div>
         </div>
     </main>
 
-    <footer class="footer-nav">
-        <a href="index.html" class="active">
-            <img src="https://api.iconify.design/ic:baseline-home.svg" alt="Home">
-            Games
-        </a>
-        <a href="#">
-            <img src="https://api.iconify.design/ic:baseline-local-offer.svg" alt="Voucher">
-            Voucher
-        </a>
-        <a href="#">
-            <img src="https://api.iconify.design/ic:baseline-apps.svg" alt="App">
-            App
-        </a>
-        <a href="#">
-            <img src="https://api.iconify.design/ic:baseline-person.svg" alt="Akun">
-            Akun
-        </a>
+    <footer class="main-footer">
+        <div class="footer-brand">
+            <h2>gamesnowku.xyz</h2>
+            <p class="footer-desc">
+                Situs ini menyajikan berbagai topup game termurah dan teraman nomor 1 di dunia!   </p>
+            <a href="mailto:Info@gamesnowku.xyz" class="footer-email">
+                📧 Info@gamesnowku.xyz
+                📱 +62 895 2503 6410
+            </a>
+        </div>
+
+        <div class="footer-links-section">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-bottom">
+            Copyright © 2025 gamesnowku.xyz
+        </div>
     </footer>
 
     <script src="footage.js"></script>
-
     <script>
-        const btn = document.getElementById('themeBtn');
-        const html = document.documentElement;
-
-        // Cek apakah user pernah simpan pilihan tema sebelumnya
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            html.setAttribute('data-theme', savedTheme);
-            if (savedTheme === 'dark') {
-                btn.innerText = '🌞'; // Kalau dark, tombol jadi matahari
+        // Fitur Search
+        function toggleSearch() {
+            let s = document.getElementById("searchContainer");
+            s.style.display = (s.style.display === "block") ? "none" : "block";
+        }
+        function searchGame() {
+            let filter = document.getElementById("searchInput").value.toUpperCase();
+            let items = document.getElementsByClassName("game-item");
+            for (let i = 0; i < items.length; i++) {
+                let title = items[i].querySelector(".game-title").innerText;
+                items[i].style.display = title.toUpperCase().indexOf(filter) > -1 ? "" : "none";
             }
         }
-
-        // Fungsi kalau tombol diklik
+        // Sidebar
+        function openNav() { document.getElementById("mySidebar").style.width = "250px"; document.getElementById("myOverlay").style.display = "block"; }
+        function closeNav() { document.getElementById("mySidebar").style.width = "0"; document.getElementById("myOverlay").style.display = "none"; }
+        // Dark Mode
+        const btn = document.getElementById('themeBtn');
         btn.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            
-            if (currentTheme === 'dark') {
-                html.removeAttribute('data-theme'); // Jadi Terang
-                btn.innerText = '🌙';
-                localStorage.setItem('theme', 'light');
-            } else {
-                html.setAttribute('data-theme', 'dark'); // Jadi Gelap
-                btn.innerText = '🌞';
-                localStorage.setItem('theme', 'dark');
-            }
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            btn.innerText = isDark ? '🌙' : '🌞';
         });
     </script>
 </body>
